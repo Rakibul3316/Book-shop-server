@@ -19,6 +19,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 client.connect(err => {
     console.log("checking error", err)
     const bookCollection = client.db("bookShop").collection("addBook");
+    const ordersCollection = client.db("bookShop").collection("orders");
 
     // Read Data for home, manage-book.
     app.get("/books", (req, res) => {
@@ -49,8 +50,21 @@ client.connect(err => {
     })
 
     // Delete Data from the database
-    app.delete('/deleteBook/:id', (req, res) => {
-        console.log(req.params.id)
+    app.delete('/deleteBook/:deleteBookID', (req, res) => {
+        console.log(req.params.deleteBookID)
+        // bookCollection.deleteOne({ _id: ObjectID(req.params.deleteBookID) })
+        //     .toArray((item) => {
+        //         res.send(item);
+        //     })
+    })
+
+    // Add order in the database
+    app.post('/addOrder', (req, res) => {
+        const order = req.body
+        ordersCollection.insertOne(order)
+            .then(result => {
+                res.send(result.insertedCount > 0)
+            })
     })
 
 });
