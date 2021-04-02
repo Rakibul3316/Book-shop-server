@@ -70,7 +70,7 @@ client.connect(err => {
     })
 
     app.get('/order', (req, res) => {
-        ordersCollection.find({})
+        ordersCollection.find({ email: req.query.email })
             .toArray((err, order) => {
                 res.send(order)
             })
